@@ -24,6 +24,8 @@ class AuthController extends BaseController
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'phone_number'    => $request->phone_number,
+            'sex'    => $request->sex,
         ]);
 
         /** @var \Tymon\JWTAuth\JWTGuard $jwt */

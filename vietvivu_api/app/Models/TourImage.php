@@ -14,6 +14,7 @@ class TourImage extends Model
         'tour_id',
         'image',
         'fileImage',
+        'path',
         'sort_order',
     ];
 

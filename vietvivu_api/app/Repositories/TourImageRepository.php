@@ -34,8 +34,9 @@ class TourImageRepository extends BaseRepository
             // Lưu đúng 2 giá trị bạn muốn
             $this->model::create([
                 'tour_id'   => $tourId,
-                'image'     => $uploaded['url'],       // URL tuyệt đối
-                'fileImage' => $uploaded['filename'],  // tên file
+                'image'     => $uploaded['url'], // URL tuyệt đối
+                'fileImage' => $uploaded['filename'], // tên file
+                'path' => $uploaded['path'], // path
                 'sort_order' => 0
             ]);
         }
@@ -79,6 +80,21 @@ class TourImageRepository extends BaseRepository
      * 3) Ảnh mới → thêm: Không có id, chỉ có file.
      * 4) Ảnh cũ → xoá: Có id + _delete = true
      */
+    // Ví dụ tổng quan
+    // images[0][id] = 12
+    // images[0][_delete] = false
+    // images[0][file] = (empty) ← ảnh cũ, KHÔNG đổi file
+
+    // images[1][id] = 15
+    // images[1][_delete] = false
+    // images[1][file] = (upload file) ← ảnh cũ, CÓ thay file
+
+    // images[2][id] = 20
+    // images[2][_delete] = true ← ảnh cũ, YÊU CẦU XÓA
+    // images[2][file] = (empty)
+
+    // images[3][file] = (upload file) ← ảnh MỚI
+
     public function syncImages($tourId, array $images)
     {
         $keepIds = []; // để biết ảnh nào giữ lại
@@ -99,7 +115,7 @@ class TourImageRepository extends BaseRepository
                 // Nếu có file mới → thay ảnh
                 if (!empty($img['file'])) {
                     // Xóa file cũ
-                    $this->imageService->deleteImage($image->fileImage);
+                    $this->imageService->deleteImage($image->path);
 
                     // Upload file mới
                     $uploaded = $this->imageService->uploadImage($img['file'], "tours/$tourId");
@@ -107,6 +123,7 @@ class TourImageRepository extends BaseRepository
                     $image->update([
                         'image'     => $uploaded['url'],
                         'fileImage' => $uploaded['filename'],
+                        'path'      => $uploaded['path'],
                     ]);
                 }
 
@@ -123,6 +140,7 @@ class TourImageRepository extends BaseRepository
                     'tour_id'    => $tourId,
                     'image'      => $uploaded['url'],
                     'fileImage'  => $uploaded['filename'],
+                    'path'      => $uploaded['path'],
                     'sort_order' => 0
                 ]);
 

@@ -30,41 +30,29 @@ class TourRouteLocationRepository extends BaseRepository
      */
     public function syncTourRouteLocations($tourId, array $locationIds)
     {
-        // Lấy toàn bộ location hiện có của tour và map theo location_id
+        // Lấy các location_id đang tồn tại
         $existing = $this->model
             ->where('tour_id', $tourId)
-            ->get()
-            ->keyBy('location_id');
+            ->pluck('location_id')
+            ->toArray();
 
-        $rows = [];
-        $ids = []; // lưu danh sách id cần giữ lại
-
-        foreach ($locationIds as $index => $locId) {
-
-            $rows[] = [
-                'id'          => $existing[$locId]->id ?? null, // nếu có thì update, không thì insert
-                'tour_id'     => $tourId,
-                'location_id' => $locId,
-                'sort_order'  => $index + 1,
-            ];
-
-            // Lưu lại id để không xóa
-            if (isset($existing[$locId])) {
-                $ids[] = $existing[$locId]->id;
-            }
-        }
-
-        // Insert hoặc update theo id
-        $this->model->upsert(
-            $rows,
-            ['id'],
-            ['location_id', 'sort_order']
-        );
-
-        // Xóa những bản ghi không còn nữa
+        // 1. Xóa những location không còn trong danh sách mới
         $this->model
             ->where('tour_id', $tourId)
-            ->whereNotIn('id', $ids)
+            ->whereNotIn('location_id', $locationIds)
             ->delete();
+
+        // 2. Insert hoặc update sort_order
+        foreach ($locationIds as $index => $locId) {
+            $this->model->updateOrCreate(
+                [
+                    'tour_id' => $tourId,
+                    'location_id' => $locId,   // DÙNG UNIQUE KEY NÀY
+                ],
+                [
+                    'sort_order' => $index + 1
+                ]
+            );
+        }
     }
 }

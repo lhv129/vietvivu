@@ -62,22 +62,22 @@ class ImageService
      */
     public function deleteImage($pathOrUrl)
     {
-        // Nếu truyền URL -> convert về path tương đối
+        if (empty($pathOrUrl)) {
+            return;
+        }
+
+        // Nếu truyền URL → convert về path tương đối
         if (str_starts_with($pathOrUrl, asset(''))) {
             $path = str_replace(asset('') . '/', '', $pathOrUrl);
         } else {
-            // Nếu truyền filename -> thêm folder gốc
-            if (!str_contains($pathOrUrl, $this->baseFolder)) {
-                $path = $this->baseFolder . '/' . $pathOrUrl;
-            } else {
-                $path = $pathOrUrl;
-            }
+            // path đầy đủ rồi → giữ nguyên
+            $path = $pathOrUrl;
         }
 
         $fullPath = public_path($path);
 
-        if (file_exists($fullPath)) {
-            unlink($fullPath);
+        if (is_file($fullPath)) {
+            @unlink($fullPath);
         }
     }
 }

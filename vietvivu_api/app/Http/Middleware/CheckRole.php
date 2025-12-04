@@ -4,7 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+
+// Mặc định id 1 : SuperAdmin, id2: Admin, id3:Staff, id4:Author, id5:Customer
 
 class CheckRole
 {
