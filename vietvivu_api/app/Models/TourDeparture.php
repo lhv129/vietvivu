@@ -11,7 +11,8 @@ class TourDeparture extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'tour_id',
-        'departure_date',
+        'start_date',
+        'end_date',
         'available_seats',
         'booked_seats',
         'price_adult',
@@ -21,4 +22,14 @@ class TourDeparture extends Model
         'sort_order',
         'is_status'
     ];
+
+    public function tour()
+    {
+        return $this->belongsTo(Tour::class);
+    }
+    
+    public function startLocation()
+    {
+        return $this->belongsTo(Location::class, 'start_location_id');
+    }
 }

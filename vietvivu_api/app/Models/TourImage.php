@@ -16,4 +16,10 @@ class TourImage extends Model
         'fileImage',
         'sort_order',
     ];
+
+    // QUAN HỆ
+    public function tour()
+    {
+        return $this->belongsTo(Tour::class);
+    }
 }

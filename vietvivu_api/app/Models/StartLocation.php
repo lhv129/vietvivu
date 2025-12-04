@@ -16,4 +16,10 @@ class StartLocation extends Model
         'is_status',
         'sort_order'
     ];
+
+    // QUAN HỆ
+    public function tours()
+    {
+        return $this->hasMany(Tour::class, 'start_location_id');
+    }
 }
