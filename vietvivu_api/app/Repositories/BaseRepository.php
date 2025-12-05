@@ -16,10 +16,11 @@ abstract class BaseRepository
     }
 
     // CRUD chung
-    public function getAll()
+    public function getAll(array $columns = ['*'])
     {
-        return $this->model->all();
+        return $this->model->select($columns)->get();
     }
+
 
     public function findOneById($id, array $columns = ['*'])
     {

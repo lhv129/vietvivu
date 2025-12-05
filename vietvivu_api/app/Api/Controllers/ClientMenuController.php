@@ -17,7 +17,7 @@ class ClientMenuController extends BaseController
 
     public function index()
     {
-        $menus = $this->service->getAll();
+        $menus = $this->service->getAll(['id', 'title', 'url', 'parent_id', 'route_type', 'identifier']);
         return $this->responseCommon(true, 'Lấy danh sách menus thành công', $menus, 200);
     }
 

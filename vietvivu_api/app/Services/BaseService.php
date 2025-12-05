@@ -15,9 +15,9 @@ abstract class BaseService
         $this->repository = app($this->repository());
     }
 
-    public function getAll()
+    public function getAll(array $columns = ['*'])
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($columns);
     }
 
     public function findOneById($id)
