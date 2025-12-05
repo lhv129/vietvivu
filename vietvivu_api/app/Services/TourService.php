@@ -135,7 +135,8 @@ class TourService extends BaseService
         $departures = $tour->departures->map(function ($dep) {
             return [
                 'id' => $dep->id,
-                'departure_date' => $dep->departure_date,
+                'start_date' => $dep->start_date,
+                'end_date' => $dep->end_date,
                 'available_seats' => $dep->available_seats,
                 'booked_seats' => $dep->booked_seats,
                 'price_adult' => $dep->price_adult,
